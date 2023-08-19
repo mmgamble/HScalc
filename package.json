@@ -1,0 +1,84 @@
+{
+    "name": "movie-rating-app",
+    "homepage": "homepage",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@chakra-ui/core": "^0.8.0",
+        "@emotion/core": "^10.3.1",
+        "@emotion/styled": "^10.3.0",
+        "@testing-library/jest-dom": "^5.16.1",
+        "@testing-library/react": "^12.1.2",
+        "@testing-library/user-event": "^13.5.0",
+        "@types/jest": "^27.4.0",
+        "@types/node": "^16.11.21",
+        "@types/react": "^17.0.38",
+        "@types/react-dom": "^17.0.11",
+        "chakra": "^0.0.3",
+        "emotion-theming": "^10.3.0",
+        "jsx-runtime": "^1.2.0",
+        "react": "^17.0.2",
+        "react-bootstrap": "^2.7.4",
+        "react-dnd": "^15.1.2",
+        "react-dnd-html5-backend": "^15.1.3",
+        "react-dom": "^17.0.2",
+        "react-hook-form": "^7.43.9",
+        "react-icons": "^4.8.0",
+        "react-router-dom": "^6.10.0",
+        "react-scripts": "5.0.0",
+        "state-pool": "^0.9.0",
+        "typescript": "^4.5.5",
+        "web-vitals": "^2.1.4"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "test:cov": "react-scripts test --coverage --watchAll",
+        "eject": "react-scripts eject",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build",
+        "lint": "eslint ./src --ext .tsx --ext .ts --max-warnings 0",
+        "format": "prettier --config .prettierrc --write src/**/*.{ts,tsx}"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@types/react-bootstrap": "^0.32.32",
+        "@typescript-eslint/eslint-plugin": "^5.10.1",
+        "@typescript-eslint/parser": "^5.10.1",
+        "eslint": "^8.7.0",
+        "eslint-config-prettier": "^8.8.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-react": "^7.28.0",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "gh-pages": "^3.2.3",
+        "prettier": "2.5.1",
+        "prettier-eslint": "^13.0.0"
+    },
+    "jest": {
+        "collectCoverageFrom": [
+            "src/**/*.ts",
+            "src/**/*.tsx",
+            "!src/index.tsx",
+            "!src/reportWebVitals.ts",
+            "!src/react-app-env.d.ts"
+        ]
+    }
+}
