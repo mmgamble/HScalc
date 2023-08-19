@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/HScalc/static/css/main.e6c13ad2.css",
+    "main.js": "/HScalc/static/js/main.38c4f99b.js",
+    "static/js/787.3ff21f63.chunk.js": "/HScalc/static/js/787.3ff21f63.chunk.js",
+    "index.html": "/HScalc/index.html",
+    "main.e6c13ad2.css.map": "/HScalc/static/css/main.e6c13ad2.css.map",
+    "main.38c4f99b.js.map": "/HScalc/static/js/main.38c4f99b.js.map",
+    "787.3ff21f63.chunk.js.map": "/HScalc/static/js/787.3ff21f63.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.38c4f99b.js"
+  ]
+}
