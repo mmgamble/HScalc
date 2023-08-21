@@ -1,0 +1,310 @@
+import React, { useState } from "react";
+import {
+    Select,
+    NumberInput,
+    NumberInputField,
+    NumberInputStepper,
+    NumberIncrementStepper,
+    NumberDecrementStepper
+} from "@chakra-ui/core";
+
+interface TripData {
+    tripType: string;
+}
+
+interface ClassData {
+    classType: string;
+    numTrips: number;
+    trips: TripData[];
+}
+
+interface DivisionData {
+    numClasses: number;
+    classes: ClassData[];
+}
+
+interface FormData {
+    divisions: DivisionData[];
+}
+
+function DivForm({
+    divisionIndex,
+    divisionData,
+    handleFormChange
+}: {
+    divisionIndex: number;
+    divisionData: DivisionData;
+    handleFormChange: (
+        divisionIndex: number,
+        classIndex: number,
+        field: keyof ClassData,
+        value: string | number
+    ) => void;
+}): JSX.Element {
+    const handleChange = (
+        classIndex: number,
+        field: keyof ClassData,
+        value: string | number
+    ) => {
+        handleFormChange(divisionIndex, classIndex, field, value);
+    };
+
+    const handleNumClassesChange = (value: string | number) => {
+        handleFormChange(divisionIndex, 0, "numClasses", value);
+    };
+
+    return (
+        <div>
+            <div>
+                Class Type:
+                <Select
+                    value={divisionData.classes[0].classType}
+                    onChange={(e) =>
+                        handleChange(0, "classType", e.target.value as string)
+                    }
+                >
+                    <option value="Hunter/Equitation">Hunter/Equitation</option>
+                    <option value="Jumper">Jumper</option>
+                </Select>
+            </div>
+            <div>
+                Number of Classes:
+                <NumberInput
+                    defaultValue={0}
+                    min={0}
+                    max={20}
+                    value={divisionData.numClasses}
+                    onChange={handleNumClassesChange}
+                >
+                    {/* ... (rest of the code) */}
+                </NumberInput>
+            </div>
+            {Array.from(
+                { length: divisionData.numClasses },
+                (_, classIndex) => (
+                    <div key={classIndex}>
+                        {divisionData.classes[classIndex].classType ===
+                            "Jumper" && (
+                            <>
+                                <div>
+                                    Class Type for Jumper Class {classIndex + 1}
+                                    :
+                                    <Select
+                                        value={
+                                            divisionData.classes[classIndex]
+                                                .classType
+                                        }
+                                        onChange={(e) =>
+                                            handleChange(
+                                                classIndex,
+                                                "classType",
+                                                e.target.value
+                                            )
+                                        }
+                                    >
+                                        <option value="1 - Speed">
+                                            1 - Speed
+                                        </option>
+                                        <option value="2a - Speed">
+                                            2a - Delayed JO
+                                        </option>
+                                        <option value="2b - Jumpoff">
+                                            2b - Immediate JO
+                                        </option>
+                                        <option value="2c - Power and Speed">
+                                            2c - Power and Speed
+                                        </option>
+                                    </Select>
+                                </div>
+                                <div>
+                                    Number of Trips for Jumper Class{" "}
+                                    {classIndex + 1}:
+                                    <NumberInput
+                                        defaultValue={0}
+                                        min={0}
+                                        max={20}
+                                        value={
+                                            divisionData.classes[classIndex]
+                                                .numTrips
+                                        }
+                                        onChange={(value) =>
+                                            handleChange(
+                                                classIndex,
+                                                "numTrips",
+                                                value
+                                            )
+                                        }
+                                    />
+                                </div>
+                            </>
+                        )}
+                    </div>
+                )
+            )}
+        </div>
+    );
+}
+export function HorseShows(): JSX.Element {
+    const [ringStartTime, setRingStartTime] = useState<number>(390);
+    const [divcount, setDivcount] = useState<number>(0);
+    const [formData, setFormData] = useState<FormData>({
+        divisions: []
+    });
+    const [estimatedStartTime, setEstimatedStartTime] = useState<number>(390);
+
+    const handleRingStartTimeChange = (value: string) => {
+        const time = parseInt(value);
+        setRingStartTime(time);
+    };
+    const handleNumberInputChange = (value: string | number) => {
+        const inputValue = parseInt(value as string);
+        if (!isNaN(inputValue)) {
+            setDivcount(inputValue);
+
+            const newFormData: FormData = {
+                divisions: Array.from({ length: inputValue }, () => ({
+                    numClasses: 0,
+                    classes: []
+                }))
+            };
+
+            // Update the numClasses property within the DivisionData
+            newFormData.divisions[0].numClasses = inputValue;
+
+            setFormData(newFormData);
+            calculateEstimatedStartTime(newFormData);
+        }
+    };
+
+    const minutesPerTrip: Record<string, number> = {
+        "O/F": 2,
+        "U/S": 3,
+        Jog: 7,
+        "2a - Speed": 2.5,
+        "2b - Jumpoff": 3,
+        "2c - Power and Speed": 3
+    };
+
+    const calculateEstimatedStartTime = (data: DivisionData[]) => {
+        let totalMinutes = ringStartTime;
+
+        data.forEach((divisionData) => {
+            divisionData.classes.forEach((classData) => {
+                classData.trips.forEach((tripData) => {
+                    // Calculate based on tripData.tripType and other factors
+                });
+
+                if (classData.classType in minutesPerTrip) {
+                    const minutesToAdd =
+                        classData.numTrips *
+                        minutesPerTrip[
+                            classData.classType as keyof typeof minutesPerTrip
+                        ];
+                    totalMinutes += minutesToAdd;
+                }
+            });
+        });
+
+        setEstimatedStartTime(totalMinutes);
+    };
+
+    const handleFormChange = (
+        divisionIndex: number,
+        classIndex: number,
+        field: keyof ClassData,
+        value: string | number
+    ) => {
+        const updatedData: FormData = {
+            divisions: formData.divisions.map((division, dIndex) => {
+                if (dIndex === divisionIndex) {
+                    const updatedDivision = {
+                        ...division,
+                        classes: division.classes.map((c, cIndex) => {
+                            if (cIndex === classIndex) {
+                                return {
+                                    ...c,
+                                    [field]: value
+                                };
+                            }
+                            return c;
+                        })
+                    };
+                    return updatedDivision;
+                }
+                return division;
+            })
+        };
+
+        setFormData(updatedData);
+        calculateEstimatedStartTime(updatedData.divisions);
+    };
+
+    return (
+        <div>
+            <div>
+                Choose Your Ring Start Time:
+                <Select
+                    value={ringStartTime.toString()}
+                    onChange={(e) => handleRingStartTimeChange(e.target.value)}
+                >
+                    <option value="390">6:30am</option>
+                </Select>
+            </div>
+            <div>
+                Enter Number of Divisions Before Yours:
+                <NumberInput
+                    defaultValue={0}
+                    min={0}
+                    max={20}
+                    onChange={handleNumberInputChange}
+                >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                    </NumberInputStepper>
+                </NumberInput>
+            </div>
+            Your Division Will Start at:{" "}
+            {estimatedStartTime || "Calculating..."}
+            <br />
+            {ringStartTime}
+            <br />
+            {formData.divisions[0]?.classes[0]?.numTrips}
+            <br />
+            {Array.from({ length: divcount }, (_, divisionIndex) => (
+                <div key={divisionIndex}>
+                    <h2>Division {divisionIndex + 1}</h2>
+                    <DivForm
+                        divisionIndex={divisionIndex}
+                        divisionData={formData.divisions[divisionIndex]}
+                        handleFormChange={handleFormChange}
+                    />
+                </div>
+            ))}
+            <div>
+                {/* Add the new component/section here */}
+                <div>
+                    <h2>Form Data</h2>
+                    {formData.divisions.map((division, index) => (
+                        <div key={index}>
+                            <h3>Division {index + 1}</h3>
+                            <p>Number of Classes: {division.numClasses}</p>
+                            {division.classes.map((classData, classIndex) => (
+                                <div key={classIndex}>
+                                    <p>Class Type: {classData.classType}</p>
+                                    <p>Number of Trips: {classData.numTrips}</p>
+                                    {/* Add more fields as needed */}
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+                {divisions[divisionIndex].classes.map((classes, classIndex) => (
+
