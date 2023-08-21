@@ -1,10 +1,24 @@
 import React from "react";
+import { ThemeProvider } from "@chakra-ui/core";
+//import { Image } from "@chakra-ui/core";
+import { HorseShows } from "./components/shows";
+import { useState } from "react";
 
 import "./App.css";
 function App(): JSX.Element {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return (
+        <ThemeProvider>
+            <div className="App">
+                <header className="App-header">
+                    {" "}
+                    <div className="App">Ride Time Calculator</div>
+                </header>
+                <br></br>
 
-    return <div className="App">Hello</div>;
+                <HorseShows></HorseShows>
+            </div>
+        </ThemeProvider>
+    );
 }
 
 export default App;
