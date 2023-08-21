@@ -2,7 +2,6 @@ import React from "react";
 import { ThemeProvider } from "@chakra-ui/core";
 //import { Image } from "@chakra-ui/core";
 import { HorseShows } from "./components/shows";
-import { useState } from "react";
 
 import "./App.css";
 function App(): JSX.Element {
