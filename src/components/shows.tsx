@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
     Box,
+    useToast,
     Button,
     Checkbox,
     FormControl,
@@ -12,7 +13,18 @@ import {
     NumberDecrementStepper,
     Select,
     Stack,
-    Text
+    Radio,
+    RadioGroup,
+    Badge,
+    Stat,
+    StatLabel,
+    StatNumber,
+    StatHelpText,
+    Accordion,
+    AccordionItem,
+    AccordionHeader,
+    AccordionPanel,
+    AccordionIcon
 } from "@chakra-ui/core";
 
 export function HorseShows(): JSX.Element {
@@ -26,35 +38,45 @@ export function HorseShows(): JSX.Element {
     const [localDivisions, setLocalDivisions] = useState<Division[]>(divisions);
     const [estimatedTime, setEstimatedTime] = useState<string>("");
     const [submitClicked, setSubmitClicked] = useState(false);
-    const [hackBool, setHackBool] = useState<boolean>(true);
-    const [mornaft, setmornaft] = useState<string>("AM");
+    const [hack, setHack] = useState<boolean>(false);
+    const [mornaft, setmornaft] = useState<string>("");
+    const [jog, setJog] = useState<boolean>(true);
+    const [heightchange, setheightchange] = useState<boolean>(false);
+    const [coursewalk, setcoursewalk] = useState<boolean>(false);
+    const toast = useToast();
 
     const calculateEstimatedStartTime = () => {
         let time = ringStartTime;
 
         divisions.map((division) => {
             division.classes.map((classData) => {
-                if (classData.classType === "U/S") {
-                    time = time + 10; // U/S takes 10 minutes
-                } else if (classData.classType === "O/F") {
+                if (classData.classType === "O/F") {
                     time += classData.numTrips * 2; // O/F takes 2 minutes per trip
-                } else if (classData.classType === "Jog") {
-                    time += 7; // Jog takes 7 minutes
                 } else if (classData.classType === "Medal/Classic/Derby") {
-                    time += classData.numTrips * 2.5; // Medal/Classic/Derby takes 25 minutes per trip
+                    time += classData.numTrips * 3; // Medal/Classic/Derby takes 3 minutes per trip
                 } else if (classData.classType === "II.1") {
                     time += classData.numTrips * 2.5; // Classes 2, 2a, 2b take 20 minutes per trip
                 } else if (classData.classType === "II.2b") {
                     time += classData.numTrips * 3; // Classes 2b 3 minutes per trip
                 } else if (classData.classType === "II.2a") {
-                    time += classData.numTrips * 3; // Classes 2b 3 minutes per trip
+                    time += classData.numTrips * 5; // Classes 2a 3 minutes per trip
                 } else if (classData.classType === "II.2c") {
-                    time += classData.numTrips * 2.5; // Classes 2b 3 minutes per trip
-                }
-                if (classData.hackBool === true) {
-                    time += 10;
+                    time += classData.numTrips * 2.5; // Classes 2c 3 minutes per trip
                 }
             });
+            if (division.hackBool === true) {
+                time += 10;
+            }
+            if (division.heightchangeBool === true) {
+                time += 5;
+            }
+            if (division.jogBool === true) {
+                time += 7;
+            }
+
+            if (division.coursewalkBool === true) {
+                time += 15;
+            }
         });
 
         // Convert time to hours and minutes format
@@ -81,7 +103,10 @@ export function HorseShows(): JSX.Element {
         setNumTrips(numTrips);
         setNumClass(numClass);
         setdivisionType(divisionType);
-        setHackBool(hackBool);
+        setHack(hack);
+        setJog(jog);
+        setheightchange(heightchange);
+        setcoursewalk(coursewalk);
     }, [divisions]);
 
     useEffect(() => {
@@ -103,13 +128,18 @@ export function HorseShows(): JSX.Element {
     const handleNumDivisionsChange = (value: string | number) => {
         const numDivs = parseInt(value as string);
         setNumDivisions(numDivs);
+        setDivisions([]);
 
         const newDivisions: Division[] = Array.from(
             { length: numDivs },
             () => ({
                 divisionType: "",
                 numClasses: 0,
-                classes: []
+                classes: [],
+                hackBool: false,
+                jogBool: false,
+                heightchangeBool: false,
+                coursewalkBool: false
             })
         );
         setDivisions(newDivisions);
@@ -150,14 +180,44 @@ export function HorseShows(): JSX.Element {
         setLocalDivisions(updatedDivisions);
     };
 
-    const handlehackChange = (divIndex: number, classIndex: number) => {
-        setHackBool(!divisions[divIndex].classes[classIndex].hackBool);
-        divisions[divIndex].classes[classIndex].hackBool =
-            !divisions[divIndex].classes[classIndex].hackBool;
+    const handlehackChange = (divIndex: number) => {
+        setHack(!divisions[divIndex].hackBool);
+        divisions[divIndex].hackBool = !divisions[divIndex].hackBool;
         const updatedDivisions = [...localDivisions];
-        updatedDivisions[divIndex].classes[classIndex] = {
-            ...updatedDivisions[divIndex].classes[classIndex],
-            hackBool: !updatedDivisions[divIndex].classes[classIndex].hackBool
+        updatedDivisions[divIndex] = {
+            ...updatedDivisions[divIndex]
+        };
+        setLocalDivisions(updatedDivisions);
+    };
+
+    const handleJogChange = (divIndex: number) => {
+        setJog(!divisions[divIndex].jogBool);
+        divisions[divIndex].jogBool = !divisions[divIndex].jogBool;
+        const updatedDivisions = [...localDivisions];
+        updatedDivisions[divIndex] = {
+            ...updatedDivisions[divIndex]
+        };
+        setLocalDivisions(updatedDivisions);
+    };
+
+    const handleheightChange = (divIndex: number) => {
+        setheightchange(!divisions[divIndex].heightchangeBool);
+        divisions[divIndex].heightchangeBool =
+            !divisions[divIndex].heightchangeBool;
+        const updatedDivisions = [...localDivisions];
+        updatedDivisions[divIndex] = {
+            ...updatedDivisions[divIndex]
+        };
+        setLocalDivisions(updatedDivisions);
+    };
+
+    const handleCourseWalk = (divIndex: number) => {
+        setcoursewalk(!divisions[divIndex].coursewalkBool);
+        divisions[divIndex].coursewalkBool =
+            !divisions[divIndex].coursewalkBool;
+        const updatedDivisions = [...localDivisions];
+        updatedDivisions[divIndex] = {
+            ...updatedDivisions[divIndex]
         };
         setLocalDivisions(updatedDivisions);
     };
@@ -193,14 +253,22 @@ export function HorseShows(): JSX.Element {
         updatedDivisions[divisionIndex].classes[classIndex].numTrips = value;
         setLocalDivisions(updatedDivisions);
     };
+
     // Functions for handling class data, trips, and checkboxes...
 
     return (
         <Box p={8}>
-            <Text>
-                Your Division Will Start at Approximately: {estimatedTime}
-                {mornaft}
-            </Text>
+            <Stat>
+                <StatLabel>
+                    Your Division Will Start at Approximately:
+                </StatLabel>
+                <StatNumber>
+                    {estimatedTime}
+                    {mornaft}
+                </StatNumber>
+                <StatHelpText>Good Luck!</StatHelpText>
+            </Stat>
+
             <FormControl>
                 <FormLabel>Choose Your Ring Start Time:</FormLabel>
                 <Select
@@ -233,10 +301,20 @@ export function HorseShows(): JSX.Element {
 
             {divisions.map((division, divisionIndex) => (
                 <Box key={divisionIndex} mt={4}>
-                    <Text fontSize="lg">Division {divisionIndex + 1}</Text>
-                    <FormControl>
-                        <FormLabel>Division Type:</FormLabel>
-                        {/*                    <Select
+                    <Accordion allowMultiple allowToggle>
+                        <AccordionItem>
+                            <AccordionHeader>
+                                <Box flex="1" textAlign="left">
+                                    <Badge fontSize="lg">
+                                        Division {divisionIndex + 1}
+                                    </Badge>
+                                </Box>
+                                <AccordionIcon />
+                            </AccordionHeader>
+                            <AccordionPanel pb={4}>
+                                <FormControl>
+                                    <FormLabel>Division Type:</FormLabel>
+                                    {/*                    <Select
                             value={division.divisionType}
                             onChange={(e) =>
                                 handleDivisionTypeChange(
@@ -251,204 +329,268 @@ export function HorseShows(): JSX.Element {
                             </option>
                             <option value="Jumper">Jumper</option>
                         </Select> */}
-                        <Stack spacing={10} isInline>
-                            <Checkbox
-                                value="Hunter/Equitation"
-                                onChange={(e) =>
-                                    handleDivisionTypeChange(
-                                        divisionIndex,
-                                        e.target.value
-                                    )
-                                }
-                            >
-                                Hunter/Equitation{" "}
-                            </Checkbox>
-                            <Checkbox
-                                value="Jumper"
-                                onChange={(e) =>
-                                    handleDivisionTypeChange(
-                                        divisionIndex,
-                                        e.target.value
-                                    )
-                                }
-                            >
-                                Jumper{" "}
-                            </Checkbox>
-                        </Stack>
-                        <FormControl mt={4}>
-                            <FormLabel>
-                                Enter Number of Classes In Division:
-                            </FormLabel>
-                            <NumberInput
-                                defaultValue={0}
-                                min={0}
-                                max={25}
-                                onChange={(value) =>
-                                    handleNumClassesChange(
-                                        divisionIndex,
-                                        Number(value)
-                                    )
-                                }
-                            >
-                                <NumberInputField />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
-                        </FormControl>
-                        {Array.from({
-                            length: divisions[divisionIndex].numClasses
-                        }).map((_, classIndex) => (
-                            <Box key={classIndex} mt={4}>
-                                <FormControl mt={4}>
-                                    {divisions[divisionIndex].divisionType ===
-                                        "Hunter/Equitation" && (
-                                        <>
-                                            <FormLabel>
-                                                Class {classIndex + 1} Type:
-                                            </FormLabel>
-                                            <Select
-                                                onChange={(e) =>
-                                                    handleClassTypeChange(
-                                                        divisionIndex,
-                                                        classIndex,
-                                                        e.target.value
-                                                    )
-                                                }
-                                            >
-                                                <option value=""></option>
-                                                <option value="U/S">
-                                                    Under Saddle
-                                                </option>
-                                                <option value="Jog">Jog</option>
-                                                <option value="O/F">O/F</option>
-                                                <option value="Medal/Classic/Derby">
-                                                    Medal/Classic/Derby
-                                                </option>
-                                            </Select>
 
-                                            {division.numClasses > 0 && (
-                                                <>
-                                                    <FormLabel>
-                                                        Enter Number of Trips In
-                                                        Class {classIndex + 1}:
-                                                    </FormLabel>
-                                                    <NumberInput
-                                                        defaultValue={0}
-                                                        min={0}
-                                                        max={200}
-                                                        onChange={(value) =>
-                                                            handleNumTripsChange(
-                                                                divisionIndex,
-                                                                classIndex,
-                                                                Number(value)
-                                                            )
-                                                        }
-                                                    >
-                                                        <NumberInputField />
-                                                        <NumberInputStepper>
-                                                            <NumberIncrementStepper />
-                                                            <NumberDecrementStepper />
-                                                        </NumberInputStepper>
-                                                    </NumberInput>
-                                                </>
-                                            )}
-                                            <Stack spacing={10} isInline>
-                                                <Checkbox
-                                                    defaultIsChecked
-                                                    onChange={() =>
-                                                        handlehackChange(
-                                                            divisionIndex,
-                                                            classIndex
-                                                        )
-                                                    }
-                                                >
-                                                    Division Has an U/S?
-                                                </Checkbox>
-                                                <Checkbox defaultIsChecked>
-                                                    Division Has a Jog?
-                                                </Checkbox>
-                                                <Checkbox defaultIsChecked>
-                                                    Height Change After
-                                                    Division?
-                                                </Checkbox>
-                                            </Stack>
-                                        </>
-                                    )}
-                                    {divisions[divisionIndex].divisionType ===
-                                        "Jumper" && (
-                                        <>
-                                            <FormLabel>
-                                                Class {classIndex + 1} Type:
-                                            </FormLabel>
-                                            <Select
-                                                // value={division.divisionType}
-                                                onChange={(e) =>
-                                                    handleClassTypeChange(
-                                                        divisionIndex,
-                                                        classIndex,
-                                                        e.target.value
-                                                    )
-                                                }
-                                            >
-                                                <option value=""></option>
-                                                <option value="II.1">
-                                                    II.1 - Speed
-                                                </option>
-                                                <option value="II.2a">
-                                                    II.2a - Delayed Jumpoff
-                                                </option>
-                                                <option value="II.2b">
-                                                    II.2b - Immediate Jumpoff
-                                                </option>
-                                                <option value="II.2c">
-                                                    II.2c - Power & Speed
-                                                </option>
-                                            </Select>
-                                            <FormLabel>
-                                                Enter Number of Trips In Class{" "}
-                                                {classIndex + 1}:
-                                            </FormLabel>
-                                            <NumberInput
-                                                defaultValue={0}
-                                                min={0}
-                                                max={200}
-                                                onChange={(value) =>
-                                                    handleNumTripsChange(
-                                                        divisionIndex,
-                                                        classIndex,
-                                                        Number(value)
-                                                    )
-                                                }
-                                            >
-                                                <NumberInputField />
-                                                <NumberInputStepper>
-                                                    <NumberIncrementStepper />
-                                                    <NumberDecrementStepper />
-                                                </NumberInputStepper>
-                                            </NumberInput>
-                                            <Stack spacing={10} isInline>
-                                                <Checkbox defaultIsChecked>
-                                                    Course Walk after Division?
-                                                </Checkbox>
-                                                <Checkbox defaultIsChecked>
-                                                    Height Change After
-                                                    Division?
-                                                </Checkbox>
-                                            </Stack>
-                                        </>
-                                    )}
+                                    <RadioGroup
+                                        defaultValue=""
+                                        spacing={5}
+                                        isInline
+                                        onChange={(e) =>
+                                            handleDivisionTypeChange(
+                                                divisionIndex,
+                                                e.target.value
+                                            )
+                                        }
+                                    >
+                                        <Radio
+                                            isInvalid
+                                            variantColor="blue"
+                                            value="Hunter/Equitation"
+                                            onChange={(e) =>
+                                                handleDivisionTypeChange(
+                                                    divisionIndex,
+                                                    e.target.value
+                                                )
+                                            }
+                                        >
+                                            Hunter/Equitation
+                                        </Radio>
+                                        <Radio
+                                            isInvalid
+                                            variantColor="blue"
+                                            value="Jumper"
+                                            onChange={(e) =>
+                                                handleDivisionTypeChange(
+                                                    divisionIndex,
+                                                    e.target.value
+                                                )
+                                            }
+                                        >
+                                            Jumper
+                                        </Radio>
+                                    </RadioGroup>
+                                    <FormControl mt={4}>
+                                        <FormLabel>
+                                            Enter Number of O/F Classes In
+                                            Division:
+                                        </FormLabel>
+                                        <NumberInput
+                                            defaultValue={0}
+                                            min={0}
+                                            max={25}
+                                            onChange={(value) =>
+                                                handleNumClassesChange(
+                                                    divisionIndex,
+                                                    Number(value)
+                                                )
+                                            }
+                                        >
+                                            <NumberInputField />
+                                            <NumberInputStepper>
+                                                <NumberIncrementStepper />
+                                                <NumberDecrementStepper />
+                                            </NumberInputStepper>
+                                        </NumberInput>
+                                    </FormControl>
+                                    <Stack spacing={10} isInline>
+                                        <Checkbox
+                                            isInvalid
+                                            onChange={() =>
+                                                handlehackChange(divisionIndex)
+                                            }
+                                        >
+                                            Division Has an U/S?{" "}
+                                        </Checkbox>
+                                        <Checkbox
+                                            isInvalid
+                                            onChange={() =>
+                                                handleJogChange(divisionIndex)
+                                            }
+                                        >
+                                            Division Has a Jog?
+                                        </Checkbox>
+                                        <Checkbox
+                                            isInvalid
+                                            onChange={() =>
+                                                handleheightChange(
+                                                    divisionIndex
+                                                )
+                                            }
+                                        >
+                                            Height Change After Division?
+                                        </Checkbox>
+                                        <Checkbox
+                                            isInvalid
+                                            onChange={() =>
+                                                handleCourseWalk(divisionIndex)
+                                            }
+                                        >
+                                            Course Walk After Division?
+                                        </Checkbox>
+                                    </Stack>
+                                    {Array.from({
+                                        length: divisions[divisionIndex]
+                                            .numClasses
+                                    }).map((_, classIndex) => (
+                                        <Box key={classIndex} mt={4}>
+                                            <FormControl mt={4}>
+                                                {divisions[divisionIndex]
+                                                    .divisionType ===
+                                                    "Hunter/Equitation" && (
+                                                    <>
+                                                        <FormLabel>
+                                                            Class{" "}
+                                                            {classIndex + 1}{" "}
+                                                            Type:
+                                                        </FormLabel>
+                                                        <Select
+                                                            onChange={(e) =>
+                                                                handleClassTypeChange(
+                                                                    divisionIndex,
+                                                                    classIndex,
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                        >
+                                                            <option value=""></option>
+                                                            <option value="U/S">
+                                                                Under Saddle
+                                                            </option>
+                                                            <option value="Jog">
+                                                                Jog
+                                                            </option>
+                                                            <option value="O/F">
+                                                                O/F
+                                                            </option>
+                                                            <option value="Medal/Classic/Derby">
+                                                                Medal/Classic/Derby
+                                                            </option>
+                                                        </Select>
+
+                                                        {division.numClasses >
+                                                            0 && (
+                                                            <>
+                                                                <FormLabel>
+                                                                    Enter Number
+                                                                    of Trips In
+                                                                    Class{" "}
+                                                                    {classIndex +
+                                                                        1}
+                                                                    :
+                                                                </FormLabel>
+                                                                <NumberInput
+                                                                    defaultValue={
+                                                                        0
+                                                                    }
+                                                                    min={0}
+                                                                    max={200}
+                                                                    onChange={(
+                                                                        value
+                                                                    ) =>
+                                                                        handleNumTripsChange(
+                                                                            divisionIndex,
+                                                                            classIndex,
+                                                                            Number(
+                                                                                value
+                                                                            )
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <NumberInputField />
+                                                                    <NumberInputStepper>
+                                                                        <NumberIncrementStepper />
+                                                                        <NumberDecrementStepper />
+                                                                    </NumberInputStepper>
+                                                                </NumberInput>
+                                                            </>
+                                                        )}
+                                                    </>
+                                                )}
+                                                {divisions[divisionIndex]
+                                                    .divisionType ===
+                                                    "Jumper" && (
+                                                    <>
+                                                        <FormLabel>
+                                                            Class{" "}
+                                                            {classIndex + 1}{" "}
+                                                            Type:
+                                                        </FormLabel>
+                                                        <Select
+                                                            // value={division.divisionType}
+                                                            onChange={(e) =>
+                                                                handleClassTypeChange(
+                                                                    divisionIndex,
+                                                                    classIndex,
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                        >
+                                                            <option value=""></option>
+                                                            <option value="II.1">
+                                                                II.1 - Speed
+                                                            </option>
+                                                            <option value="II.2a">
+                                                                II.2a - Delayed
+                                                                Jumpoff
+                                                            </option>
+                                                            <option value="II.2b">
+                                                                II.2b -
+                                                                Immediate
+                                                                Jumpoff
+                                                            </option>
+                                                            <option value="II.2c">
+                                                                II.2c - Power &
+                                                                Speed
+                                                            </option>
+                                                        </Select>
+                                                        <FormLabel>
+                                                            Enter Number of
+                                                            Trips In Class{" "}
+                                                            {classIndex + 1}:
+                                                        </FormLabel>
+                                                        <NumberInput
+                                                            defaultValue={0}
+                                                            min={0}
+                                                            max={200}
+                                                            onChange={(value) =>
+                                                                handleNumTripsChange(
+                                                                    divisionIndex,
+                                                                    classIndex,
+                                                                    Number(
+                                                                        value
+                                                                    )
+                                                                )
+                                                            }
+                                                        >
+                                                            <NumberInputField />
+                                                            <NumberInputStepper>
+                                                                <NumberIncrementStepper />
+                                                                <NumberDecrementStepper />
+                                                            </NumberInputStepper>
+                                                        </NumberInput>
+                                                    </>
+                                                )}
+                                            </FormControl>
+                                        </Box>
+                                    ))}
                                 </FormControl>
-                            </Box>
-                        ))}
-                    </FormControl>
+                            </AccordionPanel>
+                        </AccordionItem>
+                    </Accordion>
                 </Box>
             ))}
             <Button
                 onClick={() => {
                     calculateEstimatedStartTime();
                     setSubmitClicked(true);
+                    toast({
+                        title: "Your Division Will Start at Approx:",
+                        description: estimatedTime,
+                        status: "success",
+                        duration: 9000,
+                        isClosable: true
+                    });
                 }}
             >
                 Submit
@@ -460,16 +602,16 @@ export function HorseShows(): JSX.Element {
 interface ClassData {
     classType: string;
     numTrips: number;
-    hackBool: boolean;
-    jogBool: boolean;
-    heightchangeBool: boolean;
-    coursewalkBook: boolean;
 }
 
 interface Division {
     divisionType: string;
     numClasses: number;
     classes: ClassData[];
+    hackBool: boolean;
+    jogBool: boolean;
+    heightchangeBool: boolean;
+    coursewalkBool: boolean;
 }
 
 export default HorseShows;
