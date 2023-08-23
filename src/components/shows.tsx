@@ -582,8 +582,6 @@ export function HorseShows(): JSX.Element {
             ))}
             <Button
                 onClick={() => {
-                    calculateEstimatedStartTime();
-                    setSubmitClicked(true);
                     toast({
                         title: "Your Division Will Start at Approx:",
                         description: estimatedTime,
@@ -591,6 +589,8 @@ export function HorseShows(): JSX.Element {
                         duration: 9000,
                         isClosable: true
                     });
+                    calculateEstimatedStartTime();
+                    setSubmitClicked(true);
                 }}
             >
                 Submit
