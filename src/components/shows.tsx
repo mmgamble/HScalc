@@ -107,7 +107,21 @@ export function HorseShows(): JSX.Element {
         setJog(jog);
         setheightchange(heightchange);
         setcoursewalk(coursewalk);
-    }, [divisions]);
+        calculateEstimatedStartTime();
+    }, [divisions, submitClicked]);
+
+    useEffect(() => {
+        if (submitClicked) {
+            toast({
+                title: "Your Division Will Start at Approx:",
+                description: estimatedTime,
+                status: "success",
+                duration: 9000,
+                isClosable: true
+            });
+            setSubmitClicked(false); // Reset the flag
+        }
+    }, [submitClicked]);
 
     useEffect(() => {
         // This code will run whenever submitClicked changes to true
@@ -142,7 +156,9 @@ export function HorseShows(): JSX.Element {
                 coursewalkBool: false
             })
         );
+
         setDivisions(newDivisions);
+        setLocalDivisions(newDivisions);
     };
 
     /*     const handleNumClassesChange = (divIndex: number, value: number) => {
@@ -392,22 +408,7 @@ export function HorseShows(): JSX.Element {
                                         </NumberInput>
                                     </FormControl>
                                     <Stack spacing={10} isInline>
-                                        <Checkbox
-                                            isInvalid
-                                            onChange={() =>
-                                                handlehackChange(divisionIndex)
-                                            }
-                                        >
-                                            Division Has an U/S?{" "}
-                                        </Checkbox>
-                                        <Checkbox
-                                            isInvalid
-                                            onChange={() =>
-                                                handleJogChange(divisionIndex)
-                                            }
-                                        >
-                                            Division Has a Jog?
-                                        </Checkbox>
+                                        {" "}
                                         <Checkbox
                                             isInvalid
                                             onChange={() =>
@@ -421,10 +422,28 @@ export function HorseShows(): JSX.Element {
                                         <Checkbox
                                             isInvalid
                                             onChange={() =>
+                                                handleJogChange(divisionIndex)
+                                            }
+                                        >
+                                            Division Has a Jog?
+                                        </Checkbox>
+                                    </Stack>
+                                    <Stack spacing={10} isInline>
+                                        <Checkbox
+                                            isInvalid
+                                            onChange={() =>
                                                 handleCourseWalk(divisionIndex)
                                             }
                                         >
                                             Course Walk After Division?
+                                        </Checkbox>
+                                        <Checkbox
+                                            isInvalid
+                                            onChange={() =>
+                                                handlehackChange(divisionIndex)
+                                            }
+                                        >
+                                            Division Has an U/S?{" "}
                                         </Checkbox>
                                     </Stack>
                                     {Array.from({
@@ -453,12 +472,6 @@ export function HorseShows(): JSX.Element {
                                                             }
                                                         >
                                                             <option value=""></option>
-                                                            <option value="U/S">
-                                                                Under Saddle
-                                                            </option>
-                                                            <option value="Jog">
-                                                                Jog
-                                                            </option>
                                                             <option value="O/F">
                                                                 O/F
                                                             </option>
@@ -582,13 +595,6 @@ export function HorseShows(): JSX.Element {
             ))}
             <Button
                 onClick={() => {
-                    toast({
-                        title: "Your Division Will Start at Approx:",
-                        description: estimatedTime,
-                        status: "success",
-                        duration: 9000,
-                        isClosable: true
-                    });
                     calculateEstimatedStartTime();
                     setSubmitClicked(true);
                 }}
