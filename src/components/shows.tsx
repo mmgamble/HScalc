@@ -16,10 +16,6 @@ import {
     Radio,
     RadioGroup,
     Badge,
-    Stat,
-    StatLabel,
-    StatNumber,
-    StatHelpText,
     Accordion,
     AccordionItem,
     AccordionHeader,
@@ -43,6 +39,7 @@ export function HorseShows(): JSX.Element {
     const [jog, setJog] = useState<boolean>(true);
     const [heightchange, setheightchange] = useState<boolean>(false);
     const [coursewalk, setcoursewalk] = useState<boolean>(false);
+    const [anxious, setAnxious] = useState<boolean>(false);
     const toast = useToast();
 
     const calculateEstimatedStartTime = () => {
@@ -76,6 +73,9 @@ export function HorseShows(): JSX.Element {
 
             if (division.coursewalkBool === true) {
                 time += 10;
+            }
+            if (anxious === true) {
+                time = time - 30;
             }
         });
 
@@ -111,10 +111,11 @@ export function HorseShows(): JSX.Element {
     }, [divisions, submitClicked]);
 
     useEffect(() => {
+        const times = estimatedTime + " " + mornaft;
         if (submitClicked) {
             toast({
                 title: "Your Division Will Start at Approx:",
-                description: estimatedTime,
+                description: times,
                 status: "success",
                 duration: 9000,
                 isClosable: true
@@ -206,6 +207,10 @@ export function HorseShows(): JSX.Element {
         setLocalDivisions(updatedDivisions);
     };
 
+    const handleAnxious = () => {
+        setAnxious(!anxious);
+    };
+
     const handleJogChange = (divIndex: number) => {
         setJog(!divisions[divIndex].jogBool);
         divisions[divIndex].jogBool = !divisions[divIndex].jogBool;
@@ -284,8 +289,17 @@ export function HorseShows(): JSX.Element {
                         }
                     >
                         <option value="390">6:30am</option>
+                        <option value="420">7:00am</option>
                         <option value="450">7:30am</option>
                         <option value="480">8:00am</option>
+                        <option value="510">8:30am</option>
+                        <option value="540">9:00am</option>
+                        <option value="570">9:30am</option>
+                        <option value="600">10:00am</option>
+                        <option value="630">10:30am</option>
+                        <option value="660">11:00am</option>
+                        <option value="690">11:30am</option>
+                        <option value="720">12:00pm</option>
 
                         {/* Options for start time */}
                     </Select>
@@ -653,6 +667,10 @@ export function HorseShows(): JSX.Element {
                     </Accordion>
                 </Box>
             ))}
+            <br></br>
+            <Checkbox isInvalid onChange={() => handleAnxious()}>
+                I{"'"}m Feeling Anxious About Timing
+            </Checkbox>
             <br></br>
             <div className="heading">
                 <Button
