@@ -275,17 +275,6 @@ export function HorseShows(): JSX.Element {
     return (
         <Box p={8}>
             <div className="heading">
-                <Stat>
-                    <StatLabel>
-                        Your Division Will Start at Approximately:
-                    </StatLabel>
-                    <StatNumber>
-                        {estimatedTime}
-                        {mornaft}
-                    </StatNumber>
-                    <StatHelpText>Good Luck!</StatHelpText>
-                </Stat>
-
                 <FormControl>
                     <FormLabel>Choose Your Ring Start Time:</FormLabel>
                     <Select
