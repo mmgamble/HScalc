@@ -474,10 +474,7 @@ export function HorseShows(): JSX.Element {
                                                 </Checkbox>
                                             </Box>
                                         </Grid>
-                                        <Grid
-                                            templateColumns="repeat(3, 1fr)"
-                                            gap={6}
-                                        >
+                                        <Grid templateColumns="repeat(3, 1fr)">
                                             {Array.from({
                                                 length: divisions[divisionIndex]
                                                     .numClasses
