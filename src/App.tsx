@@ -7,13 +7,14 @@ import "./App.css";
 function App(): JSX.Element {
     return (
         <ThemeProvider>
-            <div className="App">
-                <header className="App-header">
-                    {" "}
-                    <div className="App">Ride Time Calculator</div>
-                </header>
-                <br></br>
-
+            <div>
+                <div className="App">
+                    <header className="App-header">
+                        {" "}
+                        <div className="heading">Ride Time Calculator</div>
+                    </header>
+                    <br></br>
+                </div>
                 <HorseShows></HorseShows>
             </div>
         </ThemeProvider>

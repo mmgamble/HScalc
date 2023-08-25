@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
     Box,
+    Grid,
     useToast,
     Button,
     Checkbox,
@@ -274,53 +275,59 @@ export function HorseShows(): JSX.Element {
 
     return (
         <Box p={8}>
-            <Stat>
-                <StatLabel>
-                    Your Division Will Start at Approximately:
-                </StatLabel>
-                <StatNumber>
-                    {estimatedTime}
-                    {mornaft}
-                </StatNumber>
-                <StatHelpText>Good Luck!</StatHelpText>
-            </Stat>
+            <div className="heading">
+                <Stat>
+                    <StatLabel>
+                        Your Division Will Start at Approximately:
+                    </StatLabel>
+                    <StatNumber>
+                        {estimatedTime}
+                        {mornaft}
+                    </StatNumber>
+                    <StatHelpText>Good Luck!</StatHelpText>
+                </Stat>
 
-            <FormControl>
-                <FormLabel>Choose Your Ring Start Time:</FormLabel>
-                <Select
-                    value={ringStartTime.toString()}
-                    onChange={(e) => handleRingStartTimeChange(e.target.value)}
-                >
-                    <option value="390">6:30am</option>
-                    <option value="450">7:30am</option>
-                    <option value="480">8:00am</option>
+                <FormControl>
+                    <FormLabel>Choose Your Ring Start Time:</FormLabel>
+                    <Select
+                        value={ringStartTime.toString()}
+                        onChange={(e) =>
+                            handleRingStartTimeChange(e.target.value)
+                        }
+                    >
+                        <option value="390">6:30am</option>
+                        <option value="450">7:30am</option>
+                        <option value="480">8:00am</option>
 
-                    {/* Options for start time */}
-                </Select>
-            </FormControl>
+                        {/* Options for start time */}
+                    </Select>
+                </FormControl>
 
-            <FormControl mt={4}>
-                <FormLabel>Enter Number of Divisions Before Yours:</FormLabel>
-                <NumberInput
-                    defaultValue={0}
-                    min={0}
-                    max={20}
-                    onChange={handleNumDivisionsChange}
-                >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                    </NumberInputStepper>
-                </NumberInput>
-            </FormControl>
+                <FormControl mt={4}>
+                    <FormLabel>
+                        Enter Number of Divisions Before Yours:
+                    </FormLabel>
+                    <NumberInput
+                        defaultValue={0}
+                        min={0}
+                        max={20}
+                        onChange={handleNumDivisionsChange}
+                    >
+                        <NumberInputField />
+                        <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                        </NumberInputStepper>
+                    </NumberInput>
+                </FormControl>
+            </div>
 
             {divisions.map((division, divisionIndex) => (
                 <Box key={divisionIndex} mt={4}>
                     <Accordion allowMultiple allowToggle>
                         <AccordionItem>
                             <AccordionHeader>
-                                <Box flex="1" textAlign="left">
+                                <Box flex="1">
                                     <Badge fontSize="lg">
                                         Division {divisionIndex + 1}
                                     </Badge>
@@ -328,9 +335,13 @@ export function HorseShows(): JSX.Element {
                                 <AccordionIcon />
                             </AccordionHeader>
                             <AccordionPanel pb={4}>
-                                <FormControl>
-                                    <FormLabel>Division Type:</FormLabel>
-                                    {/*                    <Select
+                                <Box borderWidth="1px" pb="10px">
+                                    <FormControl>
+                                        <FormLabel textAlign={"left"}>
+                                            Division Type:
+                                        </FormLabel>
+                                        <br></br>
+                                        {/*                    <Select
                             value={division.divisionType}
                             onChange={(e) =>
                                 handleDivisionTypeChange(
@@ -346,21 +357,10 @@ export function HorseShows(): JSX.Element {
                             <option value="Jumper">Jumper</option>
                         </Select> */}
 
-                                    <RadioGroup
-                                        defaultValue=""
-                                        spacing={5}
-                                        isInline
-                                        onChange={(e) =>
-                                            handleDivisionTypeChange(
-                                                divisionIndex,
-                                                e.target.value
-                                            )
-                                        }
-                                    >
-                                        <Radio
-                                            isInvalid
-                                            variantColor="blue"
-                                            value="Hunter/Equitation"
+                                        <RadioGroup
+                                            defaultValue=""
+                                            spacing={5}
+                                            isInline
                                             onChange={(e) =>
                                                 handleDivisionTypeChange(
                                                     divisionIndex,
@@ -368,239 +368,305 @@ export function HorseShows(): JSX.Element {
                                                 )
                                             }
                                         >
-                                            Hunter/Equitation
-                                        </Radio>
-                                        <Radio
-                                            isInvalid
-                                            variantColor="blue"
-                                            value="Jumper"
-                                            onChange={(e) =>
-                                                handleDivisionTypeChange(
-                                                    divisionIndex,
-                                                    e.target.value
-                                                )
-                                            }
-                                        >
-                                            Jumper
-                                        </Radio>
-                                    </RadioGroup>
-                                    <FormControl mt={4}>
-                                        <FormLabel>
-                                            Enter Number of O/F Classes In
-                                            Division:
-                                        </FormLabel>
-                                        <NumberInput
-                                            defaultValue={0}
-                                            min={0}
-                                            max={25}
-                                            onChange={(value) =>
-                                                handleNumClassesChange(
-                                                    divisionIndex,
-                                                    Number(value)
-                                                )
-                                            }
-                                        >
-                                            <NumberInputField />
-                                            <NumberInputStepper>
-                                                <NumberIncrementStepper />
-                                                <NumberDecrementStepper />
-                                            </NumberInputStepper>
-                                        </NumberInput>
-                                    </FormControl>
-                                    <Stack spacing={10} isInline>
-                                        {" "}
-                                        <Checkbox
-                                            isInvalid
-                                            onChange={() =>
-                                                handleheightChange(
-                                                    divisionIndex
-                                                )
-                                            }
-                                        >
-                                            Height Change After Division?
-                                        </Checkbox>
-                                        <Checkbox
-                                            isInvalid
-                                            onChange={() =>
-                                                handleJogChange(divisionIndex)
-                                            }
-                                        >
-                                            Division Has a Jog?
-                                        </Checkbox>
-                                    </Stack>
-                                    <Stack spacing={10} isInline>
-                                        <Checkbox
-                                            isInvalid
-                                            onChange={() =>
-                                                handleCourseWalk(divisionIndex)
-                                            }
-                                        >
-                                            Course Walk After Division?
-                                        </Checkbox>
-                                        <Checkbox
-                                            isInvalid
-                                            onChange={() =>
-                                                handlehackChange(divisionIndex)
-                                            }
-                                        >
-                                            Division Has an U/S?{" "}
-                                        </Checkbox>
-                                    </Stack>
-                                    {Array.from({
-                                        length: divisions[divisionIndex]
-                                            .numClasses
-                                    }).map((_, classIndex) => (
-                                        <Box key={classIndex} mt={4}>
-                                            <FormControl mt={4}>
-                                                {divisions[divisionIndex]
-                                                    .divisionType ===
-                                                    "Hunter/Equitation" && (
-                                                    <>
-                                                        <FormLabel>
-                                                            Class{" "}
-                                                            {classIndex + 1}{" "}
-                                                            Type:
-                                                        </FormLabel>
-                                                        <Select
-                                                            onChange={(e) =>
-                                                                handleClassTypeChange(
-                                                                    divisionIndex,
-                                                                    classIndex,
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                        >
-                                                            <option value=""></option>
-                                                            <option value="O/F">
-                                                                O/F
-                                                            </option>
-                                                            <option value="Medal/Classic/Derby">
-                                                                Medal/Classic/Derby
-                                                            </option>
-                                                        </Select>
+                                            <Radio
+                                                isInvalid
+                                                variantColor="blue"
+                                                value="Hunter/Equitation"
+                                                onChange={(e) =>
+                                                    handleDivisionTypeChange(
+                                                        divisionIndex,
+                                                        e.target.value
+                                                    )
+                                                }
+                                            >
+                                                Hunter/Equitation
+                                            </Radio>
+                                            <Radio
+                                                isInvalid
+                                                variantColor="blue"
+                                                value="Jumper"
+                                                onChange={(e) =>
+                                                    handleDivisionTypeChange(
+                                                        divisionIndex,
+                                                        e.target.value
+                                                    )
+                                                }
+                                            >
+                                                Jumper
+                                            </Radio>
+                                        </RadioGroup>
+                                        <FormControl mt={4}>
+                                            <FormLabel>
+                                                Enter Number of O/F Classes In
+                                                Division:
+                                            </FormLabel>
 
-                                                        {division.numClasses >
-                                                            0 && (
-                                                            <>
-                                                                <FormLabel>
-                                                                    Enter Number
-                                                                    of Trips In
-                                                                    Class{" "}
-                                                                    {classIndex +
-                                                                        1}
-                                                                    :
-                                                                </FormLabel>
-                                                                <NumberInput
-                                                                    defaultValue={
-                                                                        0
-                                                                    }
-                                                                    min={0}
-                                                                    max={200}
-                                                                    onChange={(
-                                                                        value
-                                                                    ) =>
-                                                                        handleNumTripsChange(
-                                                                            divisionIndex,
-                                                                            classIndex,
-                                                                            Number(
-                                                                                value
+                                            <NumberInput
+                                                defaultValue={0}
+                                                min={0}
+                                                max={25}
+                                                onChange={(value) =>
+                                                    handleNumClassesChange(
+                                                        divisionIndex,
+                                                        Number(value)
+                                                    )
+                                                }
+                                            >
+                                                <NumberInputField />
+                                                <NumberInputStepper>
+                                                    <NumberIncrementStepper />
+                                                    <NumberDecrementStepper />
+                                                </NumberInputStepper>
+                                            </NumberInput>
+                                        </FormControl>
+                                        <br></br>
+                                        <Stack spacing={10} isInline>
+                                            {" "}
+                                            <Checkbox
+                                                isInvalid
+                                                onChange={() =>
+                                                    handleheightChange(
+                                                        divisionIndex
+                                                    )
+                                                }
+                                            >
+                                                Height Change After Division?
+                                            </Checkbox>
+                                            <Checkbox
+                                                isInvalid
+                                                onChange={() =>
+                                                    handleJogChange(
+                                                        divisionIndex
+                                                    )
+                                                }
+                                            >
+                                                Division Has a Jog?
+                                            </Checkbox>
+                                        </Stack>
+                                        <Stack spacing={10} isInline>
+                                            <Checkbox
+                                                isInvalid
+                                                onChange={() =>
+                                                    handleCourseWalk(
+                                                        divisionIndex
+                                                    )
+                                                }
+                                            >
+                                                Course Walk After Division?
+                                            </Checkbox>
+                                            <Checkbox
+                                                isInvalid
+                                                onChange={() =>
+                                                    handlehackChange(
+                                                        divisionIndex
+                                                    )
+                                                }
+                                            >
+                                                Division Has an U/S?{" "}
+                                            </Checkbox>
+                                        </Stack>
+                                        <Grid
+                                            templateColumns="repeat(5, 1fr)"
+                                            gap={6}
+                                        >
+                                            {Array.from({
+                                                length: divisions[divisionIndex]
+                                                    .numClasses
+                                            }).map((_, classIndex) => (
+                                                <Box key={classIndex} mt={4}>
+                                                    <Box w="100%">
+                                                        <FormControl mt={4}>
+                                                            {divisions[
+                                                                divisionIndex
+                                                            ].divisionType ===
+                                                                "Hunter/Equitation" && (
+                                                                <>
+                                                                    <FormLabel>
+                                                                        Class{" "}
+                                                                        {classIndex +
+                                                                            1}{" "}
+                                                                        Type:
+                                                                    </FormLabel>
+                                                                    <Select
+                                                                        onChange={(
+                                                                            e
+                                                                        ) =>
+                                                                            handleClassTypeChange(
+                                                                                divisionIndex,
+                                                                                classIndex,
+                                                                                e
+                                                                                    .target
+                                                                                    .value
                                                                             )
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <NumberInputField />
-                                                                    <NumberInputStepper>
-                                                                        <NumberIncrementStepper />
-                                                                        <NumberDecrementStepper />
-                                                                    </NumberInputStepper>
-                                                                </NumberInput>
-                                                            </>
-                                                        )}
-                                                    </>
-                                                )}
-                                                {divisions[divisionIndex]
-                                                    .divisionType ===
-                                                    "Jumper" && (
-                                                    <>
-                                                        <FormLabel>
-                                                            Class{" "}
-                                                            {classIndex + 1}{" "}
-                                                            Type:
-                                                        </FormLabel>
-                                                        <Select
-                                                            // value={division.divisionType}
-                                                            onChange={(e) =>
-                                                                handleClassTypeChange(
-                                                                    divisionIndex,
-                                                                    classIndex,
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                        >
-                                                            <option value=""></option>
-                                                            <option value="II.1">
-                                                                II.1 - Speed
-                                                            </option>
-                                                            <option value="II.2a">
-                                                                II.2a - Delayed
-                                                                Jumpoff
-                                                            </option>
-                                                            <option value="II.2b">
-                                                                II.2b -
-                                                                Immediate
-                                                                Jumpoff
-                                                            </option>
-                                                            <option value="II.2c">
-                                                                II.2c - Power &
-                                                                Speed
-                                                            </option>
-                                                        </Select>
-                                                        <FormLabel>
-                                                            Enter Number of
-                                                            Trips In Class{" "}
-                                                            {classIndex + 1}:
-                                                        </FormLabel>
-                                                        <NumberInput
-                                                            defaultValue={0}
-                                                            min={0}
-                                                            max={200}
-                                                            onChange={(value) =>
-                                                                handleNumTripsChange(
-                                                                    divisionIndex,
-                                                                    classIndex,
-                                                                    Number(
-                                                                        value
-                                                                    )
-                                                                )
-                                                            }
-                                                        >
-                                                            <NumberInputField />
-                                                            <NumberInputStepper>
-                                                                <NumberIncrementStepper />
-                                                                <NumberDecrementStepper />
-                                                            </NumberInputStepper>
-                                                        </NumberInput>
-                                                    </>
-                                                )}
-                                            </FormControl>
-                                        </Box>
-                                    ))}
-                                </FormControl>
+                                                                        }
+                                                                    >
+                                                                        <option value=""></option>
+                                                                        <option value="O/F">
+                                                                            O/F
+                                                                        </option>
+                                                                        <option value="Medal/Classic/Derby">
+                                                                            Medal/Classic/Derby
+                                                                        </option>
+                                                                    </Select>
+
+                                                                    {division.numClasses >
+                                                                        0 && (
+                                                                        <>
+                                                                            <FormLabel>
+                                                                                Enter
+                                                                                Number
+                                                                                of
+                                                                                Trips
+                                                                                In
+                                                                                Class{" "}
+                                                                                {classIndex +
+                                                                                    1}
+
+                                                                                :
+                                                                            </FormLabel>
+                                                                            <NumberInput
+                                                                                defaultValue={
+                                                                                    0
+                                                                                }
+                                                                                min={
+                                                                                    0
+                                                                                }
+                                                                                max={
+                                                                                    200
+                                                                                }
+                                                                                onChange={(
+                                                                                    value
+                                                                                ) =>
+                                                                                    handleNumTripsChange(
+                                                                                        divisionIndex,
+                                                                                        classIndex,
+                                                                                        Number(
+                                                                                            value
+                                                                                        )
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                <NumberInputField />
+                                                                                <NumberInputStepper>
+                                                                                    <NumberIncrementStepper />
+                                                                                    <NumberDecrementStepper />
+                                                                                </NumberInputStepper>
+                                                                            </NumberInput>
+                                                                        </>
+                                                                    )}
+                                                                </>
+                                                            )}
+                                                            {divisions[
+                                                                divisionIndex
+                                                            ].divisionType ===
+                                                                "Jumper" && (
+                                                                <>
+                                                                    <FormLabel>
+                                                                        Class{" "}
+                                                                        {classIndex +
+                                                                            1}{" "}
+                                                                        Type:
+                                                                    </FormLabel>
+                                                                    <Select
+                                                                        // value={division.divisionType}
+                                                                        onChange={(
+                                                                            e
+                                                                        ) =>
+                                                                            handleClassTypeChange(
+                                                                                divisionIndex,
+                                                                                classIndex,
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <option value=""></option>
+                                                                        <option value="II.1">
+                                                                            II.1
+                                                                            -
+                                                                            Speed
+                                                                        </option>
+                                                                        <option value="II.2a">
+                                                                            II.2a
+                                                                            -
+                                                                            Delayed
+                                                                            Jumpoff
+                                                                        </option>
+                                                                        <option value="II.2b">
+                                                                            II.2b
+                                                                            -
+                                                                            Immediate
+                                                                            Jumpoff
+                                                                        </option>
+                                                                        <option value="II.2c">
+                                                                            II.2c
+                                                                            -
+                                                                            Power
+                                                                            &
+                                                                            Speed
+                                                                        </option>
+                                                                    </Select>
+                                                                    <FormLabel>
+                                                                        Enter
+                                                                        Number
+                                                                        of Trips
+                                                                        In Class{" "}
+                                                                        {classIndex +
+                                                                            1}
+                                                                        :
+                                                                    </FormLabel>
+                                                                    <NumberInput
+                                                                        defaultValue={
+                                                                            0
+                                                                        }
+                                                                        min={0}
+                                                                        max={
+                                                                            200
+                                                                        }
+                                                                        onChange={(
+                                                                            value
+                                                                        ) =>
+                                                                            handleNumTripsChange(
+                                                                                divisionIndex,
+                                                                                classIndex,
+                                                                                Number(
+                                                                                    value
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <NumberInputField />
+                                                                        <NumberInputStepper>
+                                                                            <NumberIncrementStepper />
+                                                                            <NumberDecrementStepper />
+                                                                        </NumberInputStepper>
+                                                                    </NumberInput>
+                                                                </>
+                                                            )}
+                                                        </FormControl>
+                                                    </Box>
+                                                </Box>
+                                            ))}
+                                        </Grid>
+                                    </FormControl>
+                                </Box>
                             </AccordionPanel>
                         </AccordionItem>
                     </Accordion>
                 </Box>
             ))}
-            <Button
-                onClick={() => {
-                    calculateEstimatedStartTime();
-                    setSubmitClicked(true);
-                }}
-            >
-                Submit
-            </Button>
+            <br></br>
+            <div className="heading">
+                <Button
+                    onClick={() => {
+                        calculateEstimatedStartTime();
+                        setSubmitClicked(true);
+                    }}
+                >
+                    Submit
+                </Button>
+            </div>
         </Box>
     );
 }
