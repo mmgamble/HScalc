@@ -420,53 +420,63 @@ export function HorseShows(): JSX.Element {
                                             </NumberInput>
                                         </FormControl>
                                         <br></br>
-                                        <Stack spacing={10} isInline>
-                                            {" "}
-                                            <Checkbox
-                                                isInvalid
-                                                onChange={() =>
-                                                    handleheightChange(
-                                                        divisionIndex
-                                                    )
-                                                }
-                                            >
-                                                Height Change After Division?
-                                            </Checkbox>
-                                            <Checkbox
-                                                isInvalid
-                                                onChange={() =>
-                                                    handleJogChange(
-                                                        divisionIndex
-                                                    )
-                                                }
-                                            >
-                                                Division Has a Jog?
-                                            </Checkbox>
-                                        </Stack>
-                                        <Stack spacing={10} isInline>
-                                            <Checkbox
-                                                isInvalid
-                                                onChange={() =>
-                                                    handleCourseWalk(
-                                                        divisionIndex
-                                                    )
-                                                }
-                                            >
-                                                Course Walk After Division?
-                                            </Checkbox>
-                                            <Checkbox
-                                                isInvalid
-                                                onChange={() =>
-                                                    handlehackChange(
-                                                        divisionIndex
-                                                    )
-                                                }
-                                            >
-                                                Division Has an U/S?{" "}
-                                            </Checkbox>
-                                        </Stack>
                                         <Grid
-                                            templateColumns="repeat(5, 1fr)"
+                                            templateColumns="repeat(4, 1fr)"
+                                            gap={6}
+                                        >
+                                            {" "}
+                                            <Box w="100%">
+                                                <Checkbox
+                                                    isInvalid
+                                                    onChange={() =>
+                                                        handleheightChange(
+                                                            divisionIndex
+                                                        )
+                                                    }
+                                                >
+                                                    Height Change After
+                                                    Division?
+                                                </Checkbox>
+                                            </Box>
+                                            <Box w="100%">
+                                                <Checkbox
+                                                    isInvalid
+                                                    onChange={() =>
+                                                        handleJogChange(
+                                                            divisionIndex
+                                                        )
+                                                    }
+                                                >
+                                                    Division Has a Jog?
+                                                </Checkbox>
+                                            </Box>
+                                            <Box w="100%">
+                                                <Checkbox
+                                                    isInvalid
+                                                    onChange={() =>
+                                                        handleCourseWalk(
+                                                            divisionIndex
+                                                        )
+                                                    }
+                                                >
+                                                    Course Walk After Division?
+                                                </Checkbox>
+                                            </Box>
+                                            <Box w="100%">
+                                                <Checkbox
+                                                    isInvalid
+                                                    onChange={() =>
+                                                        handlehackChange(
+                                                            divisionIndex
+                                                        )
+                                                    }
+                                                >
+                                                    Division Has an U/S?{" "}
+                                                </Checkbox>
+                                            </Box>
+                                        </Grid>
+                                        <Grid
+                                            templateColumns="repeat(3, 1fr)"
                                             gap={6}
                                         >
                                             {Array.from({
