@@ -522,7 +522,6 @@ export function HorseShows(): JSX.Element {
                                                                         0 && (
                                                                         <>
                                                                             <FormLabel>
-                                                                                Enter
                                                                                 Number
                                                                                 of
                                                                                 Trips
