@@ -53,19 +53,19 @@ export function HorseShows(): JSX.Element {
                 if (classData.classType === "O/F") {
                     time += classData.numTrips * 2; // O/F takes 2 minutes per trip
                 } else if (classData.classType === "Medal/Classic/Derby") {
-                    time += classData.numTrips * 3; // Medal/Classic/Derby takes 3 minutes per trip
+                    time += classData.numTrips * 2.5; // Medal/Classic/Derby takes 3 minutes per trip
                 } else if (classData.classType === "II.1") {
-                    time += classData.numTrips * 2.5; // Classes 2, 2a, 2b take 20 minutes per trip
+                    time += classData.numTrips * 2; // Speed classes take 2 minutes per trip
                 } else if (classData.classType === "II.2b") {
-                    time += classData.numTrips * 3; // Classes 2b 3 minutes per trip
+                    time += classData.numTrips * 2.5; // Classes 2b 3 minutes per trip
                 } else if (classData.classType === "II.2a") {
-                    time += classData.numTrips * 5; // Classes 2a 3 minutes per trip
+                    time += classData.numTrips * 4; // Classes 2a 3 minutes per trip
                 } else if (classData.classType === "II.2c") {
                     time += classData.numTrips * 2.5; // Classes 2c 3 minutes per trip
                 }
             });
             if (division.hackBool === true) {
-                time += 10;
+                time += 9;
             }
             if (division.heightchangeBool === true) {
                 time += 5;
@@ -75,7 +75,7 @@ export function HorseShows(): JSX.Element {
             }
 
             if (division.coursewalkBool === true) {
-                time += 15;
+                time += 10;
             }
         });
 
