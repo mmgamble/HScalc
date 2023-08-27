@@ -20,7 +20,15 @@ import {
     AccordionItem,
     AccordionHeader,
     AccordionPanel,
-    AccordionIcon
+    AccordionIcon,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure
 } from "@chakra-ui/core";
 
 export function HorseShows(): JSX.Element {
@@ -41,6 +49,7 @@ export function HorseShows(): JSX.Element {
     const [coursewalk, setcoursewalk] = useState<boolean>(false);
     const [anxious, setAnxious] = useState<boolean>(false);
     const toast = useToast();
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const calculateEstimatedStartTime = () => {
         let time = ringStartTime;
@@ -58,30 +67,34 @@ export function HorseShows(): JSX.Element {
                 } else if (classData.classType === "II.2a") {
                     time += classData.numTrips * 4; // Classes 2a 3 minutes per trip
                 } else if (classData.classType === "II.2c") {
-                    time += classData.numTrips * 2.5; // Classes 2c 3 minutes per trip
+                    time += classData.numTrips * 2; // Classes 2c 3 minutes per trip
                 }
             });
             if (division.hackBool === true) {
-                time += 9;
+                time += 7;
             }
             if (division.heightchangeBool === true) {
-                time += 5;
+                time += 3;
             }
             if (division.jogBool === true) {
-                time += 7;
+                time += 5;
             }
 
             if (division.coursewalkBool === true) {
                 time += 10;
             }
             if (anxious === true) {
-                time = time - 30;
+                time = time - 10;
             }
         });
 
         // Convert time to hours and minutes format
         let hours = Math.floor(time / 60);
-        const minutes = time % 60;
+        let minutes = time % 60;
+
+        if (Math.floor((time % 60) * 10) % 10 === 5) {
+            minutes = Math.floor(time % 60);
+        }
         if (hours > 12) {
             setmornaft("PM");
             hours = hours - 12;
@@ -279,6 +292,37 @@ export function HorseShows(): JSX.Element {
 
     return (
         <Box p={8}>
+            <>
+                <Button onClick={onOpen}>Info</Button>
+
+                <Modal isOpen={isOpen} onClose={onClose}>
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader>Calculator Info</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            This calculator can be used to determine the
+                            estimated time that your division will start.
+                            <br></br>
+                            <br></br> As with any equine event, many factors
+                            play a role in the schedule. This calculator
+                            provides an estimate of the earliest time your
+                            division will run. Click the {"'"} feeling anxious
+                            {"' "}
+                            button to give yourself extra time.
+                            <br></br>
+                            <br></br>
+                            On show day, pay attention to class count and
+                            schedule changes - recalculate time if needed.
+                            <br></br>
+                            <br></br> Please make sure you choose the division
+                            type to enter class data.
+                        </ModalBody>
+
+                        <ModalFooter></ModalFooter>
+                    </ModalContent>
+                </Modal>
+            </>
             <div className="heading">
                 <FormControl>
                     <FormLabel>Choose Your Ring Start Time:</FormLabel>
@@ -493,6 +537,12 @@ export function HorseShows(): JSX.Element {
                                                             ].divisionType ===
                                                                 "Hunter/Equitation" && (
                                                                 <>
+                                                                    <Badge variant="outline">
+                                                                        Class{" "}
+                                                                        {classIndex +
+                                                                            1}{" "}
+                                                                    </Badge>
+                                                                    <br></br>
                                                                     <FormLabel>
                                                                         Class{" "}
                                                                         {classIndex +
@@ -572,6 +622,12 @@ export function HorseShows(): JSX.Element {
                                                             ].divisionType ===
                                                                 "Jumper" && (
                                                                 <>
+                                                                    <Badge variant="outline">
+                                                                        Class{" "}
+                                                                        {classIndex +
+                                                                            1}{" "}
+                                                                    </Badge>
+                                                                    <br></br>
                                                                     <FormLabel>
                                                                         Class{" "}
                                                                         {classIndex +
@@ -619,7 +675,6 @@ export function HorseShows(): JSX.Element {
                                                                         </option>
                                                                     </Select>
                                                                     <FormLabel>
-                                                                        Enter
                                                                         Number
                                                                         of Trips
                                                                         In Class{" "}
