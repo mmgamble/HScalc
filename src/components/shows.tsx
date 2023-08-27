@@ -20,15 +20,7 @@ import {
     AccordionItem,
     AccordionHeader,
     AccordionPanel,
-    AccordionIcon,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    useDisclosure
+    AccordionIcon
 } from "@chakra-ui/core";
 
 export function HorseShows(): JSX.Element {
@@ -49,7 +41,6 @@ export function HorseShows(): JSX.Element {
     const [coursewalk, setcoursewalk] = useState<boolean>(false);
     const [anxious, setAnxious] = useState<boolean>(false);
     const toast = useToast();
-    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const calculateEstimatedStartTime = () => {
         let time = ringStartTime;
@@ -83,10 +74,14 @@ export function HorseShows(): JSX.Element {
             if (division.coursewalkBool === true) {
                 time += 10;
             }
-            if (anxious === true) {
-                time = time - 10;
-            }
         });
+        if (anxious === true) {
+            if (time - 30 > ringStartTime) {
+                time = time - 30;
+            } else if (time - 30 <= ringStartTime) {
+                time = ringStartTime;
+            }
+        }
 
         // Convert time to hours and minutes format
         let hours = Math.floor(time / 60);
@@ -292,37 +287,6 @@ export function HorseShows(): JSX.Element {
 
     return (
         <Box p={8}>
-            <>
-                <Button onClick={onOpen}>Info</Button>
-
-                <Modal isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>Calculator Info</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>
-                            This calculator can be used to determine the
-                            estimated time that your division will start.
-                            <br></br>
-                            <br></br> As with any equine event, many factors
-                            play a role in the schedule. This calculator
-                            provides an estimate of the earliest time your
-                            division will run. Click the {"'"} feeling anxious
-                            {"' "}
-                            button to give yourself extra time.
-                            <br></br>
-                            <br></br>
-                            On show day, pay attention to class count and
-                            schedule changes - recalculate time if needed.
-                            <br></br>
-                            <br></br> Please make sure you choose the division
-                            type to enter class data.
-                        </ModalBody>
-
-                        <ModalFooter></ModalFooter>
-                    </ModalContent>
-                </Modal>
-            </>
             <div className="heading">
                 <FormControl>
                     <FormLabel>Choose Your Ring Start Time:</FormLabel>
@@ -407,6 +371,7 @@ export function HorseShows(): JSX.Element {
                                             defaultValue=""
                                             spacing={5}
                                             isInline
+                                            variantColor="teal"
                                             onChange={(e) =>
                                                 handleDivisionTypeChange(
                                                     divisionIndex,
@@ -416,7 +381,7 @@ export function HorseShows(): JSX.Element {
                                         >
                                             <Radio
                                                 isInvalid
-                                                variantColor="blue"
+                                                variantColor="teal"
                                                 value="Hunter/Equitation"
                                                 onChange={(e) =>
                                                     handleDivisionTypeChange(
@@ -429,7 +394,7 @@ export function HorseShows(): JSX.Element {
                                             </Radio>
                                             <Radio
                                                 isInvalid
-                                                variantColor="blue"
+                                                variantColor="teal"
                                                 value="Jumper"
                                                 onChange={(e) =>
                                                     handleDivisionTypeChange(
@@ -473,6 +438,7 @@ export function HorseShows(): JSX.Element {
                                             {" "}
                                             <Box w="100%">
                                                 <Checkbox
+                                                    variantColor="teal"
                                                     isInvalid
                                                     onChange={() =>
                                                         handleheightChange(
@@ -486,6 +452,7 @@ export function HorseShows(): JSX.Element {
                                             </Box>
                                             <Box w="100%">
                                                 <Checkbox
+                                                    variantColor="teal"
                                                     isInvalid
                                                     onChange={() =>
                                                         handleJogChange(
@@ -498,6 +465,7 @@ export function HorseShows(): JSX.Element {
                                             </Box>
                                             <Box w="100%">
                                                 <Checkbox
+                                                    variantColor="teal"
                                                     isInvalid
                                                     onChange={() =>
                                                         handleCourseWalk(
@@ -510,6 +478,7 @@ export function HorseShows(): JSX.Element {
                                             </Box>
                                             <Box w="100%">
                                                 <Checkbox
+                                                    variantColor="teal"
                                                     isInvalid
                                                     onChange={() =>
                                                         handlehackChange(
@@ -537,16 +506,18 @@ export function HorseShows(): JSX.Element {
                                                             ].divisionType ===
                                                                 "Hunter/Equitation" && (
                                                                 <>
-                                                                    <Badge variant="outline">
-                                                                        Class{" "}
-                                                                        {classIndex +
-                                                                            1}{" "}
-                                                                    </Badge>
-                                                                    <br></br>
+                                                                    <div className="heading">
+                                                                        <Badge
+                                                                            variant="outline"
+                                                                            variantColor="teal"
+                                                                            fontSize="md"
+                                                                        >
+                                                                            Class{" "}
+                                                                            {classIndex +
+                                                                                1}{" "}
+                                                                        </Badge>
+                                                                    </div>
                                                                     <FormLabel>
-                                                                        Class{" "}
-                                                                        {classIndex +
-                                                                            1}{" "}
                                                                         Type:
                                                                     </FormLabel>
                                                                     <Select
@@ -578,11 +549,6 @@ export function HorseShows(): JSX.Element {
                                                                                 Number
                                                                                 of
                                                                                 Trips
-                                                                                In
-                                                                                Class{" "}
-                                                                                {classIndex +
-                                                                                    1}
-
                                                                                 :
                                                                             </FormLabel>
                                                                             <NumberInput
@@ -622,16 +588,18 @@ export function HorseShows(): JSX.Element {
                                                             ].divisionType ===
                                                                 "Jumper" && (
                                                                 <>
-                                                                    <Badge variant="outline">
-                                                                        Class{" "}
-                                                                        {classIndex +
-                                                                            1}{" "}
-                                                                    </Badge>
-                                                                    <br></br>
+                                                                    <div className="heading">
+                                                                        <Badge
+                                                                            variant="outline"
+                                                                            variantColor="teal"
+                                                                            fontSize="md"
+                                                                        >
+                                                                            Class{" "}
+                                                                            {classIndex +
+                                                                                1}{" "}
+                                                                        </Badge>
+                                                                    </div>
                                                                     <FormLabel>
-                                                                        Class{" "}
-                                                                        {classIndex +
-                                                                            1}{" "}
                                                                         Type:
                                                                     </FormLabel>
                                                                     <Select
@@ -677,9 +645,6 @@ export function HorseShows(): JSX.Element {
                                                                     <FormLabel>
                                                                         Number
                                                                         of Trips
-                                                                        In Class{" "}
-                                                                        {classIndex +
-                                                                            1}
                                                                         :
                                                                     </FormLabel>
                                                                     <NumberInput
