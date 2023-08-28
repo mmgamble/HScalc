@@ -125,7 +125,7 @@ export function HorseShows(): JSX.Element {
                 title: "The Earliest Time Your Division Will Start at is Approx:",
                 description: times,
                 status: "success",
-                duration: 9000,
+                duration: 8999,
                 isClosable: true
             });
             setSubmitClicked(false); // Reset the flag
