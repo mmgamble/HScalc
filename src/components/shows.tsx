@@ -122,7 +122,7 @@ export function HorseShows(): JSX.Element {
         const times = estimatedTime + " " + mornaft;
         if (submitClicked) {
             toast({
-                title: "Your Division Will Start at Approx:",
+                title: "The Earliest Time Your Division Will Start at is Approx:",
                 description: times,
                 status: "success",
                 duration: 9000,
