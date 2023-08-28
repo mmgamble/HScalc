@@ -298,6 +298,7 @@ export function HorseShows(): JSX.Element {
                     >
                         <option value="390">6:30am</option>
                         <option value="420">7:00am</option>
+                        <option value="435">7:15am</option>
                         <option value="450">7:30am</option>
                         <option value="480">8:00am</option>
                         <option value="510">8:30am</option>
