@@ -699,7 +699,7 @@ export function HorseShows(): JSX.Element {
                         setSubmitClicked(true);
                     }}
                 >
-                    Submit
+                    Calculate
                 </Button>
             </div>
         </Box>

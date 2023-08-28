@@ -43,7 +43,10 @@ function App(): JSX.Element {
                                     <br></br> As with any equine event, many
                                     factors play a role in the schedule. This
                                     calculator provides an estimate of the
-                                    earliest time your division will run. Click
+                                    earliest time your division will run based
+                                    on division/class type, number of trips and
+                                    other factors (Jogs/Under Saddle
+                                    Classes/Height Changes/Course Walks). Click
                                     the {"'"} feeling anxious
                                     {"' "}
                                     button to give yourself extra time.
